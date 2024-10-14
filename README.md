@@ -1,5 +1,5 @@
 # utslabTODO
-database initialization
+1.open php my admin , database initialization :
 
 CREATE DATABASE IF NOT EXISTS todo_list_db
 USE todo_list_db
@@ -28,3 +28,6 @@ CREATE TABLE tasks (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (list_id) REFERENCES todo_lists(id) ON DELETE CASCADE
 );
+
+2.change database config in config.php,
+sesuaikan username & password di phpmyadmin
