@@ -1,5 +1,5 @@
 # utslabTODO
-1.open php my admin , database initialization :
+1.open DBMS , database initialization :
 
 CREATE DATABASE IF NOT EXISTS todo_list_db /*change this db name to ur choice*/
 USE todo_list_db
@@ -30,4 +30,4 @@ CREATE TABLE tasks (
 );
 
 2.change database config in config.php,
-sesuaikan username & password di phpmyadmin
+sesuaikan username & password di DBMS
