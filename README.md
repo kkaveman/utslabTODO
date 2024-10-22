@@ -1,7 +1,7 @@
 # utslabTODO
 1.open php my admin , database initialization :
 
-CREATE DATABASE IF NOT EXISTS todo_list_db
+CREATE DATABASE IF NOT EXISTS todo_list_db /*change this db name to ur choice*/
 USE todo_list_db
 
 CREATE TABLE users (

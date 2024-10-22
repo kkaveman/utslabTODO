@@ -1,5 +1,3 @@
-
-<!-- profile.php -->
 <?php
 require_once 'config.php';
 require_once 'functions.php';
@@ -27,6 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (empty($username) || empty($email)) {
         $error = "Username and email are required.";
+    } elseif (!empty($new_password) && strlen($new_password) < 6) {
+        $error = "New password must be at least 6 characters long.";
     } else {
         $query = "UPDATE users SET username = ?, email = ? WHERE id = ?";
         $stmt = mysqli_prepare($conn, $query);
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="flex h-16 items-center justify-between">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
-                            <img class="h-8 w-8" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=300" alt="Your Company">
+                            <h2 class="text-white text-lg"><b><i>ToDO</i></b></h2>
                         </div>
                         <div class="hidden md:block">
                             <div class="ml-10 flex items-baseline space-x-4">
@@ -140,9 +140,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
 
                                 <div>
-                                    <label for="new_password" class="block text-sm font-medium leading-6 text-gray-900">New Password (leave blank to keep current password)</label>
+                                    <label for="new_password" class="block text-sm font-medium leading-6 text-gray-900">New Password (leave blank to keep current password, must be at least 6 characters)</label>
                                     <div class="mt-2">
-                                        <input type="password" id="new_password" name="new_password" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <input type="password" id="new_password" name="new_password" minlength="6" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     </div>
                                 </div>
 

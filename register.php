@@ -1,5 +1,3 @@
-
-<!-- register.php -->
 <?php
 require_once 'config.php';
 require_once 'functions.php';
@@ -17,18 +15,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (empty($username) || empty($email) || empty($password)) {
         $error = "All fields are required.";
+    } elseif (strlen($password) < 6) {
+        $error = "Password must be at least 6 characters long.";
     } else {
-        $hashed_password = hash_password($password);
-        $query = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+        // Check if username already exists
+        $query = "SELECT * FROM users WHERE username = ?";
         $stmt = mysqli_prepare($conn, $query);
-        mysqli_stmt_bind_param($stmt, "sss", $username, $email, $hashed_password);
-
-        if (mysqli_stmt_execute($stmt)) {
-            $_SESSION['user_id'] = mysqli_insert_id($conn);
-            $_SESSION['username'] = $username;
-            redirect('login.php');
+        mysqli_stmt_bind_param($stmt, "s", $username);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        
+        if (mysqli_num_rows($result) > 0) {
+            $error = "This username is already taken. Please choose a different one.";
         } else {
-            $error = "Registration failed. Please try again.";
+            // Check if email already exists
+            $query = "SELECT * FROM users WHERE email = ?";
+            $stmt = mysqli_prepare($conn, $query);
+            mysqli_stmt_bind_param($stmt, "s", $email);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            
+            if (mysqli_num_rows($result) > 0) {
+                $error = "This email is already registered. Please use a different email or try to log in.";
+            } else {
+                // If both username and email are unique, proceed with registration
+                $hashed_password = hash_password($password);
+                $query = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+                $stmt = mysqli_prepare($conn, $query);
+                mysqli_stmt_bind_param($stmt, "sss", $username, $email, $hashed_password);
+
+                if (mysqli_stmt_execute($stmt)) {
+                    $_SESSION['user_id'] = mysqli_insert_id($conn);
+                    $_SESSION['username'] = $username;
+                    redirect('login.php');
+                } else {
+                    $error = "Registration failed. Please try again.";
+                }
+            }
         }
     }
 }
@@ -46,7 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8">
             <div>
-                <img class="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow">
                 <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
                     Create your account
                 </h2>
@@ -76,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                     <div>
                         <label for="password" class="sr-only">Password</label>
-                        <input id="password" name="password" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password">
+                        <input id="password" name="password" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password (at least 6 characters)">
                     </div>
                 </div>
 
